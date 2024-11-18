@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<title>Hello World!</title>
+<style>
+
+	body {
+		overflow: hidden;
+		max-width: 1200px;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		margin: auto;
+		padding: 0 2px;
+		font-family: ubuntu;
+	}
+
+	#chess {
+		border: 1px solid;
+		/* display: block; */
+		margin: 0 auto;
+		/* width: 800px;
+		height: 800px; */
+		width: 100%; 
+		/* width: fit-content; */
+		/* height: 100%;  */
+		/* height: calc(100% - 60px); */
+		max-height: 100%;
+
+		/* width: fit-content; */
+		aspect-ratio: 1;
+	}
+
+	.chess {
+		/* height: 100%; */
+		/* height: 100vh; */
+		/* max-height: 100%; */
+		/* justify-content: center; */
+		/* justify-content: space-between; */
+		/* align-items: stretch; */
+		/* max-width: 100%;
+		max-height: 100%; */
+
+		height: calc(100% - 50px);
+		max-width: 100%;
+		aspect-ratio: 1;
+	}
+
+	.center {
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%); 
+	}
+
+	.column {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.fit {
+		flex: 1;
+	}
+
+	.row {
+		display: flex;
+	}
+
+	.noverflow {
+		overflow: hidden;
+	}
+
+	.strech-items {
+		align-items: stretch;
+	}
+
+	.strech { 
+		align-self: stretch;
+	}
+
+	.absolute {
+		position: absolute;
+	}
+
+	.relative {
+		position: relative;
+	}
+
+	.game {
+		display: flex;
+		/* height: 100%; */
+		height: 100vh;
+		overflow: hidden;
+	}
+
+	.game .canvas {
+		flex: 3 0;
+		overflow: hidden;
+		padding: 10px;
+	}
+
+	.game .history {
+		flex: 1 1;
+		padding: 5px 10px;
+	}
+
+	#history {
+		flex-direction: column-reverse;
+	}
+
+	#history > *:nth-child(even) {
+		opacity: .6;
+	}
+
+	.toolbar {
+		display: flex;
+		margin-bottom: 10px;
+	}
+
+	.toolbar > * {
+		margin-right: 5px;
+	}
+
+	.footer {
+		padding: 2px;
+		font-size: small;
+		opacity: .8;
+	}
+	
+</style>
+</head>
+<body>
+<!-- <h1>Hello World!</h1> -->
+
+
+<h1>Chess Game</h1>
+<div class="game">
+	<div class="canvas">
+		<div class="toolbar">
+
+			<label>Color:</label>
+			<select id="color">
+				<option value="white" selected>white</option>
+				<option value="black">black</option>
+			</select>
+			<label>AI Level:</label>
+			<select id="level">
+				<option value="0">0</option>
+				<option value="1">1</option>
+				<option value="2" selected>2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+			</select>
+			<button id="reset">Reset</button>
+			<button id="undo">Undo</button>
+		</div>
+		<div class="fit column chess">
+			<canvas id="chess" class="">Canvas enabled chess game.</canvas>
+		</div>
+	</div>
+	<div class="history">
+		<h2>History</h2>
+		<div id="history" class="column"></div>
+	</div>
+</div>
+<span class="footer">© 2018-2022 <b>FreeTalk Technologies</b></span>
+
+<script type="module">
+
+import Chessboard from './board.js';
+
+
+const canvas = document.getElementById('chess');
+const level = document.getElementById('level');
+const color = document.getElementById('color');
+const reset = document.getElementById('reset');
+const undo = document.getElementById('undo');
+const history = document.getElementById('history');
+
+
+const board = new Chessboard(canvas, 'white', { onmove });
+
+board.draw();
+
+undo.onclick = () => {
+	board.undo();
+
+	history.removeChild(history.lastElementChild);
+	history.removeChild(history.lastElementChild);
+}
+
+reset.onclick = () => {
+
+	const l = parseInt(level.value);
+	const c = color.value;
+
+	board.level = l;
+	board.reset(c);
+
+	history.innerHTML = '';
+}
+
+function onmove({ from, to }) {
+
+	const e = document.createElement('b');
+	e.innerText = `${from} - ${to}`;
+
+	history.appendChild(e);
+
+}
+
+</script>
+</body>
+</html
